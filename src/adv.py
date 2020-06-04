@@ -1,4 +1,5 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -22,7 +23,6 @@ earlier adventurers. The only exit is to the south."""),
 }
 
 
-# Link rooms together
 
 room['outside'].n_to = room['foyer']
 room['foyer'].s_to = room['outside']
@@ -37,6 +37,37 @@ room['treasure'].s_to = room['narrow']
 # Main
 #
 
+
+def move(direction):
+    player.move("".join(direction[0])[0])
+
+
+def say(saying):
+    print(f'You said {" ".join(saying)}')
+
+
+action_dict = {"say": say, "move": move}
+
+
+def get_input():
+    action = input("What are you going to do: ").split(" ")
+    verb = action[0]
+    if verb in action_dict:
+        command = action_dict[verb]
+    else:
+        print("Unknown Command {verb}")
+        return
+    print(command)
+    if len(action) >= 2:
+        noun = action[1:]
+        command(noun)
+
+
+player = Player("Stanley", room['outside'])
+
+
+def get_description():
+    print(f" \n {player.location}  \n")
 # Make a new player object that is currently in the 'outside' room.
 
 # Write a loop that:
@@ -49,3 +80,16 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+
+# While True
+def main_game():
+    print(f"Welcome to Generic Fantasy Game")
+    response = input(f"Begin Game? Y/N:  ").lower()
+    (playing := True if response == "y" else False)
+    while playing:
+        get_description()
+        get_input()
+
+
+main_game()
